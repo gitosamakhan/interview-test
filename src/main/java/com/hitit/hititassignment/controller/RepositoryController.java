@@ -17,7 +17,7 @@ public class RepositoryController {
     private RepositoryDao repositoryDao;
 
     @GetMapping()
-    public List<Repository> getAppRepositories() {
+    public List<Repository> getApacheRepositories() {
         return repositoryDao.findAll();
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ContributorService {
@@ -38,7 +39,7 @@ public class ContributorService {
                 .stream()
                 .sorted(Comparator.comparingInt(Contributor::getContributions).reversed())
                 .limit(10)
-                .toList();
+                .collect(Collectors.toList());
         top10Contributors.forEach(repository::addContributor);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RepositoryService {
@@ -35,25 +36,24 @@ public class RepositoryService {
         List<Repository> repositories =
                 getAllRepositories()
                 .stream()
-                .sorted(Comparator.comparingInt(Repository::getForksCount).reversed())
+                .sorted(Comparator.comparingInt(Repository::getStargazersCount).reversed())
                 .limit(5)
-                .toList();
+                .collect(Collectors.toList());
         repositories.forEach(repository -> contributorService.setTop10Contributors(repository));
         return repositories;
     }
 
     private List<Repository> getAllRepositories() {
         ResponseEntity<String> exchange = restTemplate.exchange(URI, HttpMethod.GET, null, String.class);
-        if (exchange.getStatusCode().isError()) {
-            logger.error("Cannot get data from api endpoint: {} ", URI);
-            return new ArrayList<>();
+        if (exchange.getStatusCode().is2xxSuccessful()) {
+            String body = exchange.getBody();
+            try {
+                return objectMapper.readValue(body, new TypeReference<List<Repository>>() {});
+            } catch (JsonProcessingException jpa) {
+                logger.error("Cannot parse JSON to object: {} ", body);
+            }
         }
-        String body = exchange.getBody();
-        try {
-            return objectMapper.readValue(body, new TypeReference<List<Repository>>() {});
-        } catch (JsonProcessingException jpa) {
-            logger.error("Cannot parse JSON to object: {} ", body);
-        }
+        logger.error("Cannot get data from api endpoint: {} ", URI);
         return new ArrayList<>();
     }
 }

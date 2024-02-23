@@ -21,16 +21,19 @@ public class Repository {
     @JsonProperty("contributors_url")
     private String contributorsUrl;
 
-    @JsonProperty("forks_count")
-    private int forksCount;
+    @JsonProperty("stargazers_count")
+    private int stargazersCount;
 
     @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Contributor> contributors = new ArrayList<>();
 
     public Repository() {}
 
-    public Repository(String name) {
+    public Repository(String name, String fullName, String contributorsUrl, int stargazersCount) {
         this.name = name;
+        this.fullName = fullName;
+        this.contributorsUrl = contributorsUrl;
+        this.stargazersCount = stargazersCount;
     }
 
     public Integer getId() {
@@ -65,12 +68,12 @@ public class Repository {
         this.contributorsUrl = collaboratorsUrl;
     }
 
-    public int getForksCount() {
-        return forksCount;
+    public int getStargazersCount() {
+        return stargazersCount;
     }
 
-    public void setForksCount(int forksCount) {
-        this.forksCount = forksCount;
+    public void setStargazersCount(int stargazersCount) {
+        this.stargazersCount = stargazersCount;
     }
 
     public void addContributor(Contributor contributor) {
@@ -91,7 +94,7 @@ public class Repository {
                 ", name='" + name + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", collaboratorsUrl='" + contributorsUrl + '\'' +
-                ", forksCount=" + forksCount +
+                ", stargazersCount=" + stargazersCount +
                 '}';
     }
 }

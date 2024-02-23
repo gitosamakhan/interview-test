@@ -25,9 +25,13 @@ public class Application {
 	public CommandLineRunner commandLineRunner(RepositoryService repositoryService,
 											   RepositoryDao repositoryDao) {
 		return args -> {
-			List<Repository> top5Repositories = repositoryService.getTop5Repositories();
-			repositoryDao.saveAll(top5Repositories);
-			logger.info("Repository and Contributors data is loaded!!!");
+			try {
+				List<Repository> top5Repositories = repositoryService.getTop5Repositories();
+				repositoryDao.saveAll(top5Repositories);
+				logger.info("Repository and Contributors data is loaded in H2!!!");
+			} catch (Exception exception) {
+				logger.error("Error loading data to H2!!");
+			}
 		};
 	}
 

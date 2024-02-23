@@ -26,8 +26,7 @@ public class Contributor {
     public Contributor() {
     }
 
-    public Contributor(Integer id, String username, int contributions) {
-        this.id = id;
+    public Contributor(String username, int contributions) {
         this.username = username;
         this.contributions = contributions;
     }
